@@ -37,7 +37,6 @@ function clearLogs() {
 log(`Running on ${versionSTF} version`)
 log(`Good ${getdaypart()}, user!`)
 log(`Click to see guide`, `https://i.imgur.com/LCGvaTd.png`)
-log(`I'm happy to announce the shader editor, it will has shader preview and functions from this website :)\nStay tuned, release message will be here!`)
 
 
 var shadertoyViewLink = "https://www.shadertoy.com/view/"

@@ -1,4 +1,9 @@
-# Shadertoy to Flixel
+# Shadertoy to GLSL NOTITG
+
+It's a fork of Shadertoy to Flixel for compatibility of NotITG GLSL's
+
+# Readme from original repo
+
 node.js script which converts fragment source (.frag) glsl shaders from [Shadertoy](https://www.shadertoy.com) to [Flixel](https://haxeflixel.com). Uses a cool lib [node-file-dialog](https://github.com/manorit2001/node-file-dialog), check it out!
 
 # [Report errors here!](https://github.com/TheLeerName/ShadertoyToFlixel/issues/new)

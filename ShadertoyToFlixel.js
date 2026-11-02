@@ -130,20 +130,20 @@
 			fixAlphaChannel()
 
 			// required to add
-			ignoreWatermark = /^.*\/\/.*https:\/\/github\.com\/TheLeerName\/ShadertoyToFlixel.*$/m.test(file)
-			ignorePragmaHeader = file.includes("#pragma header")
+			ignoreWatermark = /^.*\/\/.*https:\/\/github\.com\/Mlaofmd\/ShadertoyToGLSLITG.*$/m.test(file)
+			ignorePragmaHeader = file.includes("#version 120")
 
 			// will be added if it was used it shader
 			ignoreIResolution = /^.*#define\s+iResolution\s+vec3\s*\(\s*openfl_TextureSize\s*,.*0.*\)\s*$/m.test(file) || !/\biResolution\b/.test(file)
 			ignoreITime = /\buniform\s+float\s+iTime\b/.test(file) || !/\biTime\b/.test(file)
-			ignoreIChannel0 = /^.*#define\s+iChannel0\s+bitmap\b\s*$/m.test(file) || !/\biChannel0\b/.test(file)
-			ignoreIChannel1 = /\buniform\s+sampler2D\s+iChannel1\b/.test(file) || !/\biChannel1\b/.test(file)
-			ignoreIChannel2 = /\buniform\s+sampler2D\s+iChannel2\b/.test(file) || !/\biChannel2\b/.test(file)
-			ignoreIChannel3 = /\buniform\s+sampler2D\s+iChannel3\b/.test(file) || !/\biChannel3\b/.test(file)
+			ignoreIChannel0 = /^.*#define\s+iChannel0\s+sampler0\b\s*$/m.test(file) || !/\biChannel0\b/.test(file)
+			ignoreIChannel1 = /\buniform\s+sampler2D\s+sampler1\b/.test(file) || !/\biChannel1\b/.test(file)
+			ignoreIChannel2 = /\buniform\s+sampler2D\s+sampler2\b/.test(file) || !/\biChannel2\b/.test(file)
+			ignoreIChannel3 = /\buniform\s+sampler2D\s+sampler3\b/.test(file) || !/\biChannel3\b/.test(file)
 			ignoreRound = /^.*#define\s+round\(\s*a\s*\)\s+floor\s*\(\s*a\s*\+.*\.5\)\s*$/m.test(file) || !/\bround\s*\(/.test(file)
-			ignoreTexture = /^.*#define\s+texture\s+flixel_texture2D\b\s*$/m.test(file) || !/\btexture\b/.test(file)
+			ignoreTexture = /^.*#define\s+texture\s+texture2D\b\s*$/m.test(file) || !/\btexture\b/.test(file)
 
-			ignoreTextureThirdArgumentFix = ignoreTexture || /\bvec4\s+flixel_texture2D\s*\(\s*sampler2D\s+[^\s]*\s*,\s*vec2\s+[^\s]*\s*,\s*float\s+[^\s]*\s*\)/.test(file) || [...file.matchAll(/\btexture\s*\(([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*)\)/g)].find(match => { if(funcArgsCount(match[1]) >= 3) return true; }) == null
+			ignoreTextureThirdArgumentFix = ignoreTexture || /\bvec4\s+texture2D\s*\(\s*sampler2D\s+[^\s]*\s*,\s*vec2\s+[^\s]*\s*,\s*float\s+[^\s]*\s*\)/.test(file) || [...file.matchAll(/\btexture\s*\(([^)(]*(?:\([^)(]*(?:\([^)(]*(?:\([^)(]*\)[^)(]*)*\)[^)(]*)*\)[^)(]*)*)\)/g)].find(match => { if(funcArgsCount(match[1]) >= 3) return true; }) == null
 			// match[0] = texture(iChannel0, vec2(example(example(0.5)), 0.5), 0.0)
 			// match[1] = iChannel0, vec2(example(example(0.5)), 0.5), 0.0
 
@@ -157,46 +157,54 @@
 			ignoreIChannelResolution = /^.*#define\s+iChannelResolution\s+vec3\s*\[\s*4\s*\]\s*\(.*\)\s*$/m.test(file) || !/\biChannelResolution\b/.test(file)
 
 			// misc
-			ignoreShaderHeaderEnd = /^.*\/\/\s*end\s+of\s+ShadertoyToFlixel\s+header\b\s*$/m.test(file)
+			ignoreShaderHeaderEnd = /^.*\/\/\s*end\s+of\s+ShadertoyToGLSLITG\s+header\b\s*$/m.test(file)
 			ignoreMain = /void\s+main\s*\(\s*\)\s*{/.test(file) || /\bvoid\s+main\s*\(\s*\)\s*{\s*mainImage\(\s*gl_FragColor\s*,\s*openfl_TextureCoordv\s*\*\s*openfl_TextureSize\s*\)\s*;\s*}/.test(file)
 
 			var shaderHeader = ""
 
 			// adds things in start of file
 			if (!ignoreWatermark)
-				shaderHeader += "// Automatically converted with https://github.com/TheLeerName/ShadertoyToFlixel\n"
+				shaderHeader += "// Automatically converted with https://github.com/Mlaofmd/ShadertoyToGLSLITG\n"
 
 			if (shaderHeader.length > 0) shaderHeader += "\n"
 
 			if (!ignorePragmaHeader) {
-				shaderHeader += "#pragma header\n"
-				onlog("Added #pragma header!")
+				shaderHeader += "#version 120\n"
+				onlog("Added #version 120!")
 			}
+
+			shaderHeader += "varying vec2 textureCoord\n"
+			onlog("Added varying vec2 textureCoord!")
 
 			if (shaderHeader.length > 0) shaderHeader += "\n"
 
+			shaderHeader += "uniform vec2 textureSize\n"
+			onlog("Added textureSize!")
+
 			if (!ignoreIResolution) {
-				shaderHeader += "#define iResolution vec3(openfl_TextureSize, 0.)\n"
+				shaderHeader += "#define iResolution vec3(textureSize, 0.)\n"
 				onlog("Added iResolution!")
 			}
-			if (!ignoreITime) {
-				shaderHeader += "uniform float iTime;\n"
-				onlog("Added iTime!")
-			}
+
+			shaderHeader += "uniform float time;\n"
+			shaderHeader += "#define iTime time;\n"
+			onlog("Added iTime!")
+
 			if (!ignoreIChannel0) {
-				shaderHeader += "#define iChannel0 bitmap\n"
+				shaderHeader += "uniform sampler2D sampler0;\n"
+				shaderHeader += "#define iChannel0 sampler0\n"
 				onlog("Added iChannel0!")
 			}
 			if (!ignoreIChannel1) {
-				shaderHeader += "uniform sampler2D iChannel1;\n"
+				shaderHeader += "uniform sampler2D sampler1;\n"
 				onlog("Added iChannel1!")
 			}
 			if (!ignoreIChannel2) {
-				shaderHeader += "uniform sampler2D iChannel2;\n"
+				shaderHeader += "uniform sampler2D sampler2;\n"
 				onlog("Added iChannel2!")
 			}
 			if (!ignoreIChannel3) {
-				shaderHeader += "uniform sampler2D iChannel3;\n"
+				shaderHeader += "uniform sampler2D sampler3;\n"
 				onlog("Added iChannel3!")
 			}
 			if (!ignoreRound) {
@@ -204,7 +212,7 @@
 				onlog("Added round!")
 			}
 			if (!ignoreTexture) {
-				shaderHeader += "#define texture flixel_texture2D\n"
+				shaderHeader += "#define texture texture2D\n"
 				onlog("Added texture!")
 			}
 			if(!ignoreTextureThirdArgumentFix) {
@@ -245,7 +253,7 @@
 			shaderHeader += shaderHeader_emptyVars // concating
 
 			if (!ignoreShaderHeaderEnd) {
-				shaderHeader += `\n// end of ShadertoyToFlixel header\n`
+				shaderHeader += `\n// end of ShadertoyToGLSLITG header\n`
 				onlog("Added end of shader comment header!")
 			}
 
@@ -255,7 +263,7 @@
 
 			// add footer
 			if (!ignoreMain) {
-				file += "\n\nvoid main() {\n\tmainImage(gl_FragColor, openfl_TextureCoordv*openfl_TextureSize);\n}"
+				file += "\n\nvoid main() {\n\tmainImage(gl_FragColor, textureCoord*textureSize);\n}"
 				onlog("Added void main!")
 			}
 

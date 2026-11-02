@@ -169,20 +169,20 @@
 			if (shaderHeader.length > 0) shaderHeader += "\n"
 
 			if (!ignorePragmaHeader) {
-				shaderHeader += "#version 120\n"
+				shaderHeader += "#version 120;\n"
 				onlog("Added #version 120!")
 			}
 
-			shaderHeader += "varying vec2 textureCoord\n"
+			shaderHeader += "varying vec2 textureCoord;\n"
 			onlog("Added varying vec2 textureCoord!")
 
 			if (shaderHeader.length > 0) shaderHeader += "\n"
 
-			shaderHeader += "uniform vec2 textureSize\n"
+			shaderHeader += "uniform vec2 textureSize;\n"
 			onlog("Added textureSize!")
 
 			if (!ignoreIResolution) {
-				shaderHeader += "#define iResolution vec3(textureSize, 0.)\n"
+				shaderHeader += "#define iResolution vec3(textureSize, 0.);\n"
 				onlog("Added iResolution!")
 			}
 
@@ -192,7 +192,7 @@
 
 			if (!ignoreIChannel0) {
 				shaderHeader += "uniform sampler2D sampler0;\n"
-				shaderHeader += "#define iChannel0 sampler0\n"
+				shaderHeader += "#define iChannel0 sampler0;\n"
 				onlog("Added iChannel0!")
 			}
 			if (!ignoreIChannel1) {
@@ -208,11 +208,11 @@
 				onlog("Added iChannel3!")
 			}
 			if (!ignoreRound) {
-				shaderHeader += "#define round(a) floor(a+.5)\n"
+				shaderHeader += "#define round(a) floor(a+.5);\n"
 				onlog("Added round!")
 			}
 			if (!ignoreTexture) {
-				shaderHeader += "#define texture texture2D\n"
+				shaderHeader += "#define texture texture2D;\n"
 				onlog("Added texture!")
 			}
 			if(!ignoreTextureThirdArgumentFix) {
